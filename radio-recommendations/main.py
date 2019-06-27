@@ -41,7 +41,8 @@ def get_product_data(product_id):
         'description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ei'
                        'usmod tempor incididunt ut labore et dolore magna aliqua. Ut enim a'
                        'd minim veniam, quis nostrud exercitation ullamco laboris nisi ut a'
-                       'liquip ex ea commodo consequat. Duis aute irure dolor in reprehende'
+                       'liquip ex ea commodo consequat. Duis aute irure dolor in reprehende',
+        'product_url': 'mock_product_url'
     }
     return product_data
 
