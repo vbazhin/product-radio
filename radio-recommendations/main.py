@@ -38,7 +38,10 @@ def get_product_data(product_id):
         'product_id': product_id,
         'product_name': 'Mock product_name',
         'image_url': 'http://flask.pocoo.org/docs/1.0/_static/flask.png',
-        'description': 'Mock description'
+        'description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ei'
+                       'usmod tempor incididunt ut labore et dolore magna aliqua. Ut enim a'
+                       'd minim veniam, quis nostrud exercitation ullamco laboris nisi ut a'
+                       'liquip ex ea commodo consequat. Duis aute irure dolor in reprehende'
     }
     return product_data
 

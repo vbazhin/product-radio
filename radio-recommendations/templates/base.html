@@ -34,7 +34,7 @@
                 <p>
                     <b>{{ product.product_name }}</b>
                 </p>
-                <p>{{ product.description }} </p>
+                <p>{{ product.description | truncate(80) }} </p>
             </div>
         </div>
         {% endfor %}
