@@ -18,8 +18,8 @@ DEFAULT_IMAGE_URL = 'https://www.decolore.net/wp-content/uploads/2017/04/Free-Pr
 def show_products(radio_id):
     records = get_products_ids(radio_id)
     products = []
-    for product_id in records:
-        product_data = get_product_data(product_id)
+    for product_id, image_url in records:
+        product_data = get_product_data(product_id, image_url)
         products.append(product_data)
     return render_template(
         'base.html',
@@ -43,17 +43,18 @@ def get_connection():
 def get_products_ids(radio_id):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute('select e_prod_id from sandbox.tmp_hack_similarities where slugified = \'{}\' '
+    cursor.execute('select e_prod_id, image_url from sandbox.tmp_hack_similarities where slugified = \'{}\' '
                    'order by cos_simil desc limit 5;'.format(radio_id))
     records = cursor.fetchall()
     cursor.close()
     conn.close()
-    return [i[0] for i in records]
+    return records
 
 
-def get_product_data(product_id):
+def get_product_data(product_id, image_url):
     product_url, product_name = get_product_url(product_id)
-    image_url = get_image_from_page(product_url)
+    if not image_url:
+        image_url = get_image_from_page(product_url)
     if image_url is None:
         image_url = DEFAULT_IMAGE_URL
     product_data = {
