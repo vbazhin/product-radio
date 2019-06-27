@@ -60,7 +60,6 @@ def get_product_data(product_id):
         'product_id': product_id,
         'product_name': product_name,
         'image_url': image_url,
-        'description': 'Mock description',
         'product_url': product_url
     }
     return product_data
