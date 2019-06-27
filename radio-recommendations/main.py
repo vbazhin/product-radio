@@ -1,6 +1,11 @@
+import os
+
 from flask import Flask
 from flask import render_template
 import psycopg2
+from dotenv import load_dotenv
+import requests
+from bs4 import BeautifulSoup
 
 
 app = Flask(__name__)
@@ -20,10 +25,22 @@ def show_products(radio_id):
     )
 
 
+def get_connection():
+    load_dotenv(dotenv_path='/home/leo/.deployment-config', override=True)
+
+    db_name = os.getenv('DB_DATABASE')
+    db_user = os.getenv('DB_USER')
+    db_password = os.getenv('DB_PASSWORD')
+    db_port = int(os.getenv('DB_PORT'))
+    db_host = os.getenv('DB_HOST')
+    
+    return psycopg2.connect(dbname=db_name, user=db_user, password=db_password, host=db_host, port=db_port)
+    
+
 def get_products_ids(radio_id):
-    conn = psycopg2.connect(dbname='radio', user='radio', password='radio', host='127.0.0.1')
+    conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute('select e_prod_id from "sandbox.tmp_hack_similarities" where r_prod_id = \'{}\' '
+    cursor.execute('select e_prod_id from sandbox.tmp_hack_similarities where slugified = \'{}\' '
                    'order by cos_simil desc limit 5;'.format(radio_id))
     records = cursor.fetchall()
     cursor.close()
@@ -32,16 +49,37 @@ def get_products_ids(radio_id):
 
 
 def get_product_data(product_id):
-    # Mock method.
-    # TODO: Must reequest the Hammer API.
+    product_url, product_name = get_product_url(product_id)
+    print(product_id, product_url)
     product_data = {
         'product_id': product_id,
-        'product_name': 'Mock product_name',
-        'image_url': 'http://flask.pocoo.org/docs/1.0/_static/flask.png',
-        'description': 'Mock description'
+        'product_name': product_name,
+        'image_url': get_image_from_page(product_url),
+        'description': 'Mock description',
+        'product_url': product_url
     }
     return product_data
 
 
+def get_image_from_page(product_url):
+    result = requests.get(product_url)
+    soup = BeautifulSoup(result.text, features="html.parser")
+    imgs = soup.find_all('img', class_='slider-img')
+    if imgs:
+        first_url = imgs[0].attrs['src']
+        return first_url
+    return None
+
+def get_product_url(product_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(f'''
+        select "ProductURL", "productName" from datamarts."dimProduct" where "productId" = {product_id} and "labelId" = 1; 
+    ''')
+    product_url, product_name = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return f'https://master.test.vakantieveilingen.nl/{product_url}', product_name
+
 if __name__ == '__main__':
-   app.run(debug=True)
+    app.run(debug=True)
