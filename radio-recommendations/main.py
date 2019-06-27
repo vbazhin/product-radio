@@ -11,6 +11,9 @@ from bs4 import BeautifulSoup
 app = Flask(__name__)
 
 
+DEFAULT_IMAGE_URL = 'https://www.decolore.net/wp-content/uploads/2017/04/Free-Protein-Supplement-Powder-Packaging-Mockup-PSD.jpg'
+
+
 @app.route('/<radio_id>')
 def show_products(radio_id):
     records = get_products_ids(radio_id)
@@ -50,11 +53,13 @@ def get_products_ids(radio_id):
 
 def get_product_data(product_id):
     product_url, product_name = get_product_url(product_id)
-    print(product_id, product_url)
+    image_url = get_image_from_page(product_url)
+    if image_url is None:
+        image_url = DEFAULT_IMAGE_URL
     product_data = {
         'product_id': product_id,
         'product_name': product_name,
-        'image_url': get_image_from_page(product_url),
+        'image_url': image_url,
         'description': 'Mock description',
         'product_url': product_url
     }
