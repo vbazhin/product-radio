@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+<title>{{ radio_id }}</title>
+<header></header>
+<body>
+  <h1>Products recommendations for {{ radio_id }}</h1>
+  {% for product in products %}
+  <ul>
+      <li>{{ product.product_id }}</li>
+      <li>{{ product.product_name }}"></li>
+      <li>{{ product.image_url }}"></li>
+      <li>{{ product.description }}"></li>
+  </ul>
+  {% endfor %}
+</body>
+</html>
