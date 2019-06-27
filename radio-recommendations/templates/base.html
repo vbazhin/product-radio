@@ -1,16 +1,45 @@
 <!doctype html>
 <html>
 <title>{{ radio_id }}</title>
-<header></header>
+<header>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</header>
+<style type="text/css">
+    .card {
+      box-shadow: 2px 4px 8px 2px rgba(0, 0, 0, 0.2);
+      min-width: 250px;
+      margin: auto;
+      text-align: center;
+      margin: 10px;
+      padding: 5px;
+    }
+    .card p {
+        margin: 10px;
+    }
+
+
+</style>
 <body>
-  <h1>Products recommendations for {{ radio_id }}</h1>
-  {% for product in products %}
-  <ul>
-      <li>{{ product.product_id }}</li>
-      <li>{{ product.product_name }}"></li>
-      <li>{{ product.image_url }}"></li>
-      <li>{{ product.description }}"></li>
-  </ul>
-  {% endfor %}
+<div class="container-fluid">
+    <h3> Interesting products</h3>
+    <div class="row">
+        <div class="col-sm-1"></div>
+        {% for product in products %}
+        <div class="col-sm-2">
+            <div class="card">
+                <img src="{{ product.image_url }}" alt="{{ product.product_name }}" width="80" height="90">
+                <p>
+                    <b>{{ product.product_name }}</b>
+                </p>
+                <p>{{ product.description | truncate(80) }} </p>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="col-sm-1"></div>
+    </div>
+</div>
 </body>
 </html>
