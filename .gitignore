@@ -42,3 +42,5 @@ doc/samples
 env/
 tests/config
 htmlcov/
+.python-version
+.vscode/
